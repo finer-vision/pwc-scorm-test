@@ -20,6 +20,7 @@ export const useScorm = create<Scorm>(() => {
       this.set("cmi.core.score.min", 0);
       this.set("cmi.core.score.max", 1);
       this.set("cmi.success_status", "unknown");
+      this.set("cmi.core.lesson_status", "incomplete");
       this.set("cmi.completion_status", "incomplete");
     },
     get(key, defaultValue = null) {
@@ -37,8 +38,8 @@ export const useScorm = create<Scorm>(() => {
       const progress = (pages.indexOf(page) + 1) / Math.max(1, pages.length);
       this.set("cmi.core.score.raw", Math.max(currentProgress, progress));
       if (progress === 1) {
-        this.set("cmi.core.lesson_status", "passed");
         this.set("cmi.success_status", "passed");
+        this.set("cmi.core.lesson_status", "passed");
         this.set("cmi.completion_status", "completed");
       }
     },
