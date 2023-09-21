@@ -14,39 +14,43 @@ type Scorm = {
 };
 
 export const useScorm = create<Scorm>(() => {
+  function set(key: string, value: any) {
+    scorm.set(key, JSON.stringify(value));
+  }
+
+  function get(key: string, defaultValue?: any) {
+    try {
+      return JSON.parse(scorm.get(key)) ?? defaultValue;
+    } catch {
+      return defaultValue;
+    }
+  }
+
   return {
     init() {
       scorm.configure({ debug: true });
       scorm.initialize();
-      this.set("cmi.core.score.min", 0);
-      this.set("cmi.core.score.max", 1);
-      const currentProgress = this.get("cmi.core.score.raw", 0);
+      set("cmi.core.score.min", 0);
+      set("cmi.core.score.max", 1);
+      const currentProgress = get("cmi.core.score.raw", 0);
       if (currentProgress < 1) {
-        this.set("cmi.core.lesson_status", "incomplete");
-        this.set("cmi.objectives.n.status", "incomplete");
+        set("cmi.core.lesson_status", "incomplete");
+        set("cmi.objectives.n.status", "incomplete");
       }
     },
-    get(key, defaultValue = null) {
-      try {
-        return JSON.parse(scorm.get(key)) ?? defaultValue;
-      } catch {
-        return defaultValue;
-      }
-    },
-    set(key, value) {
-      scorm.set(key, JSON.stringify(value));
-    },
+    get,
+    set,
     updateProgress(page) {
-      const currentProgress = this.get("cmi.core.score.raw", 0);
+      const currentProgress = get("cmi.core.score.raw", 0);
       const progress = (pages.indexOf(page) + 1) / Math.max(1, pages.length);
-      this.set("cmi.core.score.raw", Math.max(currentProgress, progress));
+      set("cmi.core.score.raw", Math.max(currentProgress, progress));
       if (progress === 1) {
-        this.set("cmi.core.lesson_status", "completed");
-        this.set("cmi.objectives.n.status", "completed");
+        set("cmi.core.lesson_status", "completed");
+        set("cmi.objectives.n.status", "completed");
       }
     },
     exit() {
-      this.set("cmi.core.exit", "logout");
+      set("cmi.core.exit", "logout");
       window.close();
     },
   };
