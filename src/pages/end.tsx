@@ -9,7 +9,7 @@ export default function End() {
   return (
     <main>
       <h1>End Page</h1>
-      <button onClick={window.close}>Close Course</button>
+      <button onClick={useScorm.getState().exit}>Close Course</button>
     </main>
   );
 }

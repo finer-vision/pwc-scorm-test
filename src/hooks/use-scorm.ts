@@ -10,6 +10,7 @@ type Scorm = {
   get: (key: string, defaultValue?: any) => any;
   set: (key: string, value: any) => void;
   updateProgress: (page: Page) => void;
+  exit: () => void;
 };
 
 export const useScorm = create<Scorm>(() => {
@@ -19,9 +20,11 @@ export const useScorm = create<Scorm>(() => {
       scorm.initialize();
       this.set("cmi.core.score.min", 0);
       this.set("cmi.core.score.max", 1);
-      this.set("cmi.success_status", "unknown");
-      this.set("cmi.core.lesson_status", "incomplete");
-      this.set("cmi.completion_status", "incomplete");
+      const currentProgress = this.get("cmi.core.score.raw", 0);
+      if (currentProgress < 1) {
+        this.set("cmi.core.lesson_status", "incomplete");
+        this.set("cmi.objectives.n.status", "incomplete");
+      }
     },
     get(key, defaultValue = null) {
       try {
@@ -38,10 +41,13 @@ export const useScorm = create<Scorm>(() => {
       const progress = (pages.indexOf(page) + 1) / Math.max(1, pages.length);
       this.set("cmi.core.score.raw", Math.max(currentProgress, progress));
       if (progress === 1) {
-        this.set("cmi.success_status", "passed");
-        this.set("cmi.core.lesson_status", "passed");
-        this.set("cmi.completion_status", "completed");
+        this.set("cmi.core.lesson_status", "completed");
+        this.set("cmi.objectives.n.status", "completed");
       }
+    },
+    exit() {
+      this.set("cmi.core.exit", "logout");
+      window.close();
     },
   };
 });
