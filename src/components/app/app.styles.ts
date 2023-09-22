@@ -1,4 +1,11 @@
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
+
+export const AppVersion = styled.div`
+  position: fixed;
+  top: 1em;
+  left: 1em;
+  pointer-events: none;
+`;
 
 export const AppReset = createGlobalStyle`
   :root {
@@ -50,5 +57,10 @@ export const AppReset = createGlobalStyle`
   main {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
+    padding-inline: 1em;
+  }
+
+  h1 {
+    padding-top: 3em;
   }
 `;
