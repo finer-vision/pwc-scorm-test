@@ -21,3 +21,13 @@ nvm use # uses supported Node version for this project
 npm install
 npm run build
 ```
+
+### Create SCORM Package
+
+```shell
+nvm use # uses supported Node version for this project
+npm install
+npm run package
+```
+
+Package will be output into the packages.
