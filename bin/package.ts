@@ -72,6 +72,7 @@ async function getAllFiles(dir: string, allFiles: string[] = []): Promise<string
         })
         .join("\n"),
     );
+    manifest = replaceTemplate(manifest, "version", String(pkg.version));
 
     await fs.writeFile(path.join(PACKAGES_DIR, "build", "imsmanifest.xml"), manifest);
 
