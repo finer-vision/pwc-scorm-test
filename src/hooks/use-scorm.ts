@@ -33,14 +33,13 @@ export const useScorm = create<Scorm>(() => {
 
   return {
     init() {
-      scorm.configure({ debug: true });
+      scorm.configure({ debug: true, handleExitMode: true });
       scorm.initialize();
       set("cmi.core.score.min", 0);
       set("cmi.core.score.max", 1);
       const currentProgress = get("cmi.core.score.raw", 0);
       if (currentProgress < 1) {
         set("cmi.core.lesson_status", "incomplete");
-        set("cmi.objectives.n.status", "incomplete");
       }
       return pages[Math.floor(mapLinear(currentProgress, 0, 1, 0, pages.length - 1))];
     },
@@ -52,11 +51,10 @@ export const useScorm = create<Scorm>(() => {
       set("cmi.core.score.raw", Math.max(currentProgress, progress));
       if (progress === 1) {
         set("cmi.core.lesson_status", "completed");
-        set("cmi.objectives.n.status", "completed");
       }
     },
     exit() {
-      set("cmi.core.exit", "logout");
+      scorm.terminate();
       window.close();
     },
   };
