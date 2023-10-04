@@ -42,7 +42,7 @@ export const useScorm = create<Scorm>(() => {
         set("cmi.core.lesson_status", "incomplete");
         set("cmi.objectives.n.status", "incomplete");
       }
-      return pages[mapLinear(currentProgress, 0, 1, 0, pages.length - 1)];
+      return pages[Math.floor(mapLinear(currentProgress, 0, 1, 0, pages.length - 1))];
     },
     get,
     set,
