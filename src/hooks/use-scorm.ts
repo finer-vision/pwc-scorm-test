@@ -6,12 +6,17 @@ const pages = ["/", "/home", "/end"] as const;
 type Page = (typeof pages)[number];
 
 type Scorm = {
-  init: () => void;
+  init: () => (typeof pages)[number];
   get: (key: string, defaultValue?: any) => any;
   set: (key: string, value: any) => void;
   updateProgress: (page: Page) => void;
   exit: () => void;
 };
+
+function mapLinear(x: number, a1: number, a2: number, b1: number, b2: number) {
+  const mapped = b1 + ((x - a1) * (b2 - b1)) / (a2 - a1);
+  return Math.max(b1, Math.min(b2, mapped));
+}
 
 export const useScorm = create<Scorm>(() => {
   function set(key: string, value: any) {
@@ -37,6 +42,7 @@ export const useScorm = create<Scorm>(() => {
         set("cmi.core.lesson_status", "incomplete");
         set("cmi.objectives.n.status", "incomplete");
       }
+      return pages[mapLinear(currentProgress, 0, 1, 0, pages.length - 1)];
     },
     get,
     set,

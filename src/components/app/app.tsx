@@ -1,12 +1,27 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { AppReset, AppVersion } from "@/components/app/app.styles";
 import Landing from "@/pages/landing";
 import Home from "@/pages/home";
 import End from "@/pages/end";
 import pkg from "../../../package.json";
+import { useScorm } from "@/hooks/use-scorm";
 
 export default function App() {
+  const [loading, setLoaded] = React.useState(true);
+
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const page = useScorm.getState().init();
+    setLoaded(false);
+    navigate(page);
+  }, []);
+
+  if (loading) {
+    return <>Loading...</>;
+  }
+
   return (
     <>
       <AppReset />
