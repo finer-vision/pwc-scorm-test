@@ -20,15 +20,18 @@ function mapLinear(x: number, a1: number, a2: number, b1: number, b2: number) {
 
 export const useScorm = create<Scorm>(() => {
   function set(key: string, value: any) {
-    scorm.set(key, JSON.stringify(value));
+    scorm.set(key, key === "cmi.suspend_data" ? JSON.stringify(value) : value);
   }
 
   function get(key: string, defaultValue?: any) {
-    try {
-      return JSON.parse(scorm.get(key)) ?? defaultValue;
-    } catch {
-      return defaultValue;
+    if (key === "cmi.suspend_data") {
+      try {
+        return JSON.parse(scorm.get(key)) ?? defaultValue;
+      } catch {
+        return defaultValue;
+      }
     }
+    return scorm.get(key) ?? defaultValue;
   }
 
   return {
